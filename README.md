@@ -38,7 +38,9 @@ python3 -m http.server 8000
 
 ## 公開
 
-`main` ブランチへの push をトリガーに、GitHub Actions（`.github/workflows/pages.yml`）で GitHub Pages へ自動デプロイしています。
+GitHub Pages で公開しています（Source: `main` ブランチ / ルート）。`main` を更新すると自動で反映されます。
+
+- 公開URL: https://dat0925.github.io/muimi-quiz/
 
 ---
 
