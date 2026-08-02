@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>無意味クイズ大全 ── 答えは、たぶん見えている</title>
+<title>無意味クイズ ── 答えは、たぶん見えている</title>
 <meta name="description" content="タイトルと絵文字で答えが完全にバレているのに、問題文だけ百科事典調で無駄に難解なジョーククイズ。全70問（うちひっかけ10問）。">
 <style>
   :root{
@@ -307,12 +307,77 @@
   .card.trick::before{
     border-color:#dfe3ec;
   }
+
+  .related{
+    margin-top:16px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+  }
+  .related-label{
+    font-size:10px;
+    letter-spacing:.34em;
+    text-indent:.34em;
+    color:var(--accent-soft);
+    font-weight:700;
+    margin-bottom:12px;
+  }
+  .related-apps{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:9px;
+  }
+  .related-apps a{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 12px 7px 8px;
+    border:1px solid var(--line);
+    border-radius:11px;
+    background:var(--card);
+    text-decoration:none;
+    color:var(--ink);
+    transition:transform .08s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .related-apps a:hover{
+    border-color:var(--accent-soft);
+    box-shadow:0 6px 14px -10px var(--shadow);
+    transform:translateY(-1px);
+  }
+  .app-ico{
+    width:26px;
+    height:26px;
+    flex:none;
+    border-radius:7px;
+    display:grid;
+    place-items:center;
+    color:#fff;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:0;
+  }
+  .app-name{
+    display:flex;
+    flex-direction:column;
+    line-height:1.15;
+    text-align:left;
+  }
+  .app-name b{
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+  .app-name small{
+    font-size:9.5px;
+    color:var(--ink-soft);
+    letter-spacing:.02em;
+  }
 </style>
 </head>
 <body>
   <header class="site">
     <div class="kicker">MEANINGLESS ENCYCLOPEDIA QUIZ</div>
-    <h1>無意味クイズ大全</h1>
+    <h1>無意味クイズ</h1>
     <p class="lead">タイトルにも絵文字にも、答えは堂々と書いてあります。<br>それでも問題文だけは、頑（かたく）なに百科事典調。</p>
   </header>
 
@@ -339,6 +404,24 @@
   <footer class="site">
     全70問（うちひっかけ10問）・ Vanilla JS + CSS
     <div class="hint">← スワイプ / ドラッグ、または矢印キーで移動 →</div>
+
+    <section class="related">
+      <div class="related-label">RELATED APPS</div>
+      <nav class="related-apps">
+        <a href="https://taskra.jp" target="_blank" rel="noopener">
+          <span class="app-ico" style="background:#3f6ea5;">T</span>
+          <span class="app-name"><b>Taskra</b><small>タスク管理</small></span>
+        </a>
+        <a href="https://flowra.taskra.jp" target="_blank" rel="noopener">
+          <span class="app-ico" style="background:#4f9160;">F</span>
+          <span class="app-name"><b>Flowra</b><small>家計管理</small></span>
+        </a>
+        <a href="https://tavera.taskra.jp" target="_blank" rel="noopener">
+          <span class="app-ico" style="background:#c07a3a;">T</span>
+          <span class="app-name"><b>Tavera</b><small>献立管理</small></span>
+        </a>
+      </nav>
+    </section>
   </footer>
 
 <script>
