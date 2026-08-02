@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>無意味クイズ大全 ── 答えは、たぶん見えている</title>
+<meta name="description" content="タイトルと絵文字で答えが完全にバレているのに、問題文だけ百科事典調で無駄に難解なジョーククイズ。全60問。">
+<style>
+  :root{
+    --paper:#f4f1e8;
+    --paper-edge:#ece7d8;
+    --card:#fbfaf5;
+    --ink:#2b2723;
+    --ink-soft:#6f6656;
+    --line:#d8d0bd;
+    --accent:#7c3b2e;
+    --accent-soft:#a86a4f;
+    --gold:#b99653;
+    --shadow:rgba(60,50,35,.18);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(120% 90% at 50% -10%, #faf7ee 0%, var(--paper) 55%, var(--paper-edge) 100%) fixed;
+    color:var(--ink);
+    font-family:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Hiragino Mincho Pro",serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+    min-height:100dvh;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  header.site{
+    text-align:center;
+    padding:22px 18px 8px;
+  }
+  header.site .kicker{
+    font-size:11px;
+    letter-spacing:.45em;
+    color:var(--accent-soft);
+    text-indent:.45em;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  header.site h1{
+    margin:0;
+    font-size:22px;
+    letter-spacing:.06em;
+    font-weight:700;
+  }
+  header.site .lead{
+    margin:8px auto 0;
+    max-width:30em;
+    font-size:12.5px;
+    line-height:1.7;
+    color:var(--ink-soft);
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+  }
+
+  main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    padding:6px 16px 4px;
+  }
+
+  .progress-wrap{
+    width:100%;
+    max-width:520px;
+    margin:0 auto 14px;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+  }
+  .progress-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-size:12px;
+    color:var(--ink-soft);
+    letter-spacing:.08em;
+    margin-bottom:6px;
+  }
+  .progress-count{font-variant-numeric:tabular-nums;}
+  .progress-count b{color:var(--accent);font-size:15px;}
+  .progress-bar{
+    height:5px;
+    border-radius:99px;
+    background:var(--line);
+    overflow:hidden;
+  }
+  .progress-bar span{
+    display:block;
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,var(--accent-soft),var(--accent));
+    border-radius:99px;
+    transition:width .35s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .stage{
+    width:100%;
+    max-width:520px;
+    position:relative;
+    touch-action:pan-y;
+  }
+
+  .card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:0 18px 40px -22px var(--shadow), 0 2px 0 rgba(255,255,255,.6) inset;
+    padding:26px 24px 24px;
+    overflow:hidden;
+    will-change:transform,opacity;
+  }
+  .card::before{
+    content:"";
+    position:absolute;inset:7px;
+    border:1px solid var(--paper-edge);
+    border-radius:calc(var(--radius) - 8px);
+    pointer-events:none;
+  }
+  .card.swipe-anim{transition:transform .28s ease, opacity .28s ease;}
+
+  .card .plate{
+    text-align:center;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:10.5px;
+    letter-spacing:.4em;
+    text-indent:.4em;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:12px;
+  }
+  .card h2{
+    margin:0;
+    text-align:center;
+    font-size:clamp(24px,7.4vw,32px);
+    line-height:1.28;
+    letter-spacing:.03em;
+    font-weight:700;
+  }
+  .card h2 .q-suffix{
+    display:block;
+    font-size:.5em;
+    color:var(--accent-soft);
+    letter-spacing:.3em;
+    margin-top:6px;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+  }
+
+  .emoji{
+    text-align:center;
+    font-size:118px;
+    line-height:1;
+    margin:14px 0 18px;
+    filter:drop-shadow(0 10px 14px rgba(60,50,35,.18));
+    user-select:none;
+    font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  }
+
+  .divider{
+    display:flex;align-items:center;gap:12px;
+    color:var(--line);
+    margin:2px 4px 16px;
+  }
+  .divider::before,.divider::after{
+    content:"";flex:1;height:1px;background:var(--line);
+  }
+  .divider span{
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:10px;letter-spacing:.35em;text-indent:.35em;color:var(--ink-soft);
+  }
+
+  .question{
+    font-size:16px;
+    line-height:2.0;
+    letter-spacing:.02em;
+    color:var(--ink);
+    text-align:justify;
+    text-justify:inter-character;
+  }
+  .question .lead-mark{
+    color:var(--accent);
+    font-weight:700;
+    margin-right:.15em;
+  }
+
+  .reveal-btn{
+    display:block;
+    width:100%;
+    margin-top:22px;
+    padding:15px 18px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(180deg,var(--accent-soft),var(--accent));
+    color:#fdf6ee;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-indent:.14em;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    cursor:pointer;
+    box-shadow:0 10px 20px -12px var(--accent);
+    transition:transform .08s ease, filter .2s ease;
+  }
+  .reveal-btn:active{transform:translateY(1px);}
+  .reveal-btn:disabled{cursor:default;}
+
+  .answer{
+    margin-top:20px;
+    border-top:1px dashed var(--line);
+    padding-top:18px;
+    text-align:center;
+    opacity:0;
+    max-height:0;
+    overflow:hidden;
+    transform:translateY(6px);
+    transition:opacity .4s ease, transform .4s ease, max-height .4s ease;
+  }
+  .answer.show{opacity:1;max-height:280px;transform:none;}
+  .answer .a-label{
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:11px;letter-spacing:.4em;text-indent:.4em;color:var(--accent-soft);font-weight:700;
+    margin-bottom:8px;
+  }
+  .answer .a-text{
+    font-size:clamp(22px,6.4vw,28px);
+    font-weight:700;
+    letter-spacing:.04em;
+    color:var(--accent);
+  }
+  .answer .a-note{
+    margin-top:12px;
+    font-size:12px;
+    line-height:1.7;
+    color:var(--ink-soft);
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+  }
+
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    width:100%;
+    max-width:520px;
+    margin:16px auto 4px;
+  }
+  .nav button{
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    border-radius:11px;
+    padding:12px 16px;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.05em;
+    cursor:pointer;
+    transition:background .15s ease, transform .08s ease, opacity .15s ease;
+  }
+  .nav button:active{transform:translateY(1px);}
+  .nav button:disabled{opacity:.35;cursor:default;}
+  .nav .arrow{min-width:104px;}
+  .nav .shuffle{
+    display:inline-flex;align-items:center;gap:6px;
+    background:linear-gradient(180deg,#fff,#f3eee0);
+    color:var(--accent);
+    border-color:var(--accent-soft);
+  }
+
+  footer.site{
+    text-align:center;
+    padding:10px 16px 22px;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.06em;
+  }
+  .hint{
+    margin-top:2px;
+    color:var(--accent-soft);
+  }
+
+  @media (max-width:380px){
+    .emoji{font-size:96px;}
+    .question{font-size:15px;line-height:1.95;}
+    .nav .arrow{min-width:86px;padding:12px 10px;}
+  }
+  @media (min-width:560px){
+    header.site{padding-top:34px;}
+    .card{padding:34px 34px 30px;}
+  }
+</style>
+</head>
+<body>
+  <header class="site">
+    <div class="kicker">MEANINGLESS ENCYCLOPEDIA QUIZ</div>
+    <h1>無意味クイズ大全</h1>
+    <p class="lead">タイトルにも絵文字にも、答えは堂々と書いてあります。<br>それでも問題文だけは、頑（かたく）なに百科事典調。</p>
+  </header>
+
+  <main>
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-count"><b id="cur">1</b> <span aria-hidden="true">/</span> <span id="total">60</span></span>
+        <span id="mode-label">出題順：標準</span>
+      </div>
+      <div class="progress-bar"><span id="bar"></span></div>
+    </div>
+
+    <div class="stage" id="stage">
+      <!-- card injected here -->
+    </div>
+
+    <nav class="nav">
+      <button class="arrow" id="prev" type="button" aria-label="前の問題">‹ 前へ</button>
+      <button class="shuffle" id="shuffle" type="button" aria-label="出題順をシャッフル">⇄ シャッフル</button>
+      <button class="arrow" id="next" type="button" aria-label="次の問題">次へ ›</button>
+    </nav>
+  </main>
+
+  <footer class="site">
+    全60問 ・ Vanilla JS + CSS
+    <div class="hint">← スワイプ / ドラッグ、または矢印キーで移動 →</div>
+  </footer>
+
+<script>
+const QUIZ = [
+  {"id":1,"title":"ジョージ・ワシントンクイズ","emoji":"🇺🇸","question":"1789年、アメリカ合衆国憲法に基づき選出された、同国行政府の長の初代就任者(しゅうにんしゃ)は誰か。","answer":"ジョージ・ワシントン"},
+  {"id":2,"title":"カボチャクイズ","emoji":"🎃","question":"ウリ科カボチャ属に属する蔓性(つるせい)一年草の果実で、緯度(いど)の高い地域では冬至(とうじ)に摂食(せっしょく)する風習が見られる緑黄色野菜は何か。","answer":"カボチャ"},
+  {"id":3,"title":"富士山クイズ","emoji":"🗻","question":"山梨・静岡両県にまたがる標高3,776mの成層火山(せいそうかざん)で、2013年に世界文化遺産に登録された日本の最高峰(さいこうほう)は何か。","answer":"富士山"},
+  {"id":4,"title":"エジソンクイズ","emoji":"💡","question":"19世紀後半、炭化竹(たんかたけ)フィラメントを用いた白熱電球の実用化に成功した米国の発明家は誰か。","answer":"トーマス・エジソン"},
+  {"id":5,"title":"パリクイズ","emoji":"🇫🇷","question":"セーヌ川沿いに位置し、イル=ド=フランス地域圏の中核(ちゅうかく)をなすフランス共和国の首都はどこか。","answer":"パリ"},
+  {"id":6,"title":"織田信長クイズ","emoji":"⚔️","question":"天正(てんしょう)10年6月2日、京都の寺院において家臣・明智光秀の謀反(むほん)により自害(じがい)した尾張国(おわりのくに)出身の戦国大名は誰か。","answer":"織田信長"},
+  {"id":7,"title":"キリンクイズ","emoji":"🦒","question":"偶蹄目(ぐうていもく)キリン科に属し、頸椎(けいつい)の著しい伸長(しんちょう)により現生(げんせい)陸上動物中最大の体高(たいこう)を有する草食獣は何か。","answer":"キリン"},
+  {"id":8,"title":"月クイズ","emoji":"🌕","question":"地球の唯一の自然衛星であり、その公転周期と自転周期の一致により常に同一面を地球に向けている天体は何か。","answer":"月"},
+  {"id":9,"title":"夏目漱石クイズ","emoji":"🐱","question":"明治38年、雑誌『ホトトギス』に発表された、飼い猫の視点から人間社会を諷刺(ふうし)した長編小説の著者は誰か。","answer":"夏目漱石"},
+  {"id":10,"title":"カレークイズ","emoji":"🍛","question":"複数の香辛料(こうしんりょう)を配合した煮込み料理で、明治期に英国海軍経由で日本に伝来(でんらい)し国民食の地位を得たものは何か。","answer":"カレー"},
+  {"id":11,"title":"東京タワークイズ","emoji":"🗼","question":"1958年竣工(しゅんこう)、高さ333mの総合電波塔で、インターナショナルオレンジと白の塗装(とそう)が施(ほどこ)された港区芝公園の建造物は何か。","answer":"東京タワー"},
+  {"id":12,"title":"アインシュタインクイズ","emoji":"🧑‍🔬","question":"1905年に特殊相対性理論を発表し、1921年に光電効果(こうでんこうか)の理論的解明によりノーベル物理学賞を受賞した理論物理学者は誰か。","answer":"アルベルト・アインシュタイン"},
+  {"id":13,"title":"パンダクイズ","emoji":"🐼","question":"食肉目(しょくにくもく)クマ科に分類されながら食性(しょくせい)のほぼ全てを竹類(ちくるい)に依存する、中国四川省(しせんしょう)などに生息する哺乳類(ほにゅうるい)は何か。","answer":"パンダ(ジャイアントパンダ)"},
+  {"id":14,"title":"寿司クイズ","emoji":"🍣","question":"酢と塩で調味した米飯(べいはん)に魚介類等を取り合わせた日本料理で、江戸期に屋台料理として発展した「握り」の形式が代表的なものは何か。","answer":"寿司"},
+  {"id":15,"title":"自由の女神クイズ","emoji":"🗽","question":"1886年、米国独立100周年を記念してフランス国民から寄贈(きぞう)された、リバティ島に立つ銅製の巨像(きょぞう)は何か。","answer":"自由の女神"},
+  {"id":16,"title":"ベートーヴェンクイズ","emoji":"🎼","question":"聴覚(ちょうかく)を失いながらも交響曲第5番ハ短調(たんちょう)等を作曲した、ボン出身・ウィーンで活動した作曲家は誰か。","answer":"ベートーヴェン"},
+  {"id":17,"title":"ラーメンクイズ","emoji":"🍜","question":"かん水を加えた中華麺を出汁(だし)と調味料からなるスープに合わせた麺料理で、20世紀に日本で独自の発展を遂(と)げたものは何か。","answer":"ラーメン"},
+  {"id":18,"title":"坂本龍馬クイズ","emoji":"🗡️","question":"慶応(けいおう)2年、薩摩(さつま)・長州(ちょうしゅう)両藩の軍事同盟締結(ていけつ)を周旋(しゅうせん)し、後に近江屋事件(おうみやじけん)で暗殺された土佐藩郷士(ごうし)出身の志士(しし)は誰か。","answer":"坂本龍馬"},
+  {"id":19,"title":"ピラミッドクイズ","emoji":"🔺","question":"古代エジプト・古王国時代に建設された四角錐状(しかくすいじょう)の石造建造物で、ギザの三大のものが特に著名(ちょめい)なものは何か。","answer":"ピラミッド"},
+  {"id":20,"title":"モナリザクイズ","emoji":"🖼️","question":"ルーヴル美術館所蔵(しょぞう)、レオナルド・ダ・ヴィンチ作とされるポプラ板に描かれた女性の肖像画(しょうぞうが)は何か。","answer":"モナリザ"},
+  {"id":21,"title":"新幹線クイズ","emoji":"🚄","question":"1964年の東海道区間開業を嚆矢(こうし)とする、主たる区間を時速200km以上で走行する日本の幹線鉄道システムは何か。","answer":"新幹線"},
+  {"id":22,"title":"ゾウクイズ","emoji":"🐘","question":"長鼻目(ちょうびもく)に属する現生最大の陸上哺乳類で、上唇(じょうしん)と鼻が融合(ゆうごう)した器官を採食(さいしょく)や吸水に用いる動物は何か。","answer":"ゾウ"},
+  {"id":23,"title":"聖徳太子クイズ","emoji":"📜","question":"推古朝(すいこちょう)において摂政(せっしょう)を務め、冠位十二階(かんいじゅうにかい)および十七条憲法を制定したと伝えられる皇族(こうぞく)は誰か。","answer":"聖徳太子"},
+  {"id":24,"title":"たこ焼きクイズ","emoji":"🐙","question":"小麦粉の生地(きじ)に頭足類(とうそくるい)の切り身を入れ球状に焼成(しょうせい)した、昭和初期に大阪で考案(こうあん)されたとされる料理は何か。","answer":"たこ焼き"},
+  {"id":25,"title":"シェイクスピアクイズ","emoji":"🎭","question":"エリザベス朝期に活動し、デンマーク王子の復讐譚(ふくしゅうたん)を含む四大悲劇を著(あらわ)した劇作家は誰か。","answer":"シェイクスピア"},
+  {"id":26,"title":"京都クイズ","emoji":"⛩️","question":"延暦(えんりゃく)13年の遷都(せんと)から明治維新(めいじいしん)まで千年以上にわたり皇居が置かれた、鹿苑寺舎利殿(ろくおんじしゃりでん)の所在地としても知られる都市はどこか。","answer":"京都"},
+  {"id":27,"title":"ペンギンクイズ","emoji":"🐧","question":"ペンギン目に属する飛翔能力(ひしょうのうりょく)を欠く海鳥の総称(そうしょう)で、翼が遊泳用(ゆうえいよう)の鰭状(ひれじょう)に変化しているものは何か。","answer":"ペンギン"},
+  {"id":28,"title":"マリオクイズ","emoji":"🍄","question":"1985年発売の横スクロールアクションゲームを代表作とする、赤い帽子と口髭(くちひげ)が特徴の任天堂のキャラクターは誰か。","answer":"マリオ"},
+  {"id":29,"title":"太陽クイズ","emoji":"☀️","question":"太陽系の全質量(ぜんしつりょう)の約99.86%を占(し)める、スペクトル型G2Vの主系列星(しゅけいれつせい)は何か。","answer":"太陽"},
+  {"id":30,"title":"徳川家康クイズ","emoji":"🏯","question":"慶長(けいちょう)8年に征夷大将軍(せいいたいしょうぐん)に任(にん)ぜられ、江戸に幕府を開いた三河国(みかわのくに)岡崎出身の武将は誰か。","answer":"徳川家康"},
+  {"id":31,"title":"カボチャクイズ(その2)","emoji":"🎃","question":"10月31日の祭事(さいじ)において、内部をくり抜(ぬ)き灯火(とうか)を入れた提灯(ちょうちん)として用いられるウリ科の果菜(かさい)は何か。","answer":"カボチャ"},
+  {"id":32,"title":"トマトクイズ","emoji":"🍅","question":"ナス科の多年生植物(たねんせいしょくぶつ)の果実で、リコピンを豊富(ほうふ)に含み、南米アンデス原産(げんさん)ながら世界中で栽培(さいばい)される緋色(ひいろ)の果菜(かさい)は何か。","answer":"トマト"},
+  {"id":33,"title":"ネコクイズ","emoji":"🐱","question":"食肉目ネコ科の小型哺乳類で、古代エジプトで家畜化(かちくか)されたとされ、鋭敏(えいびん)な聴覚と柔軟(じゅうなん)な体躯(たいく)を持つ愛玩動物(あいがんどうぶつ)は何か。","answer":"ネコ"},
+  {"id":34,"title":"コアラクイズ","emoji":"🐨","question":"有袋目(ゆうたいもく)に属しユーカリの葉を主食(しゅしょく)とする、オーストラリア東部に生息する樹上性(じゅじょうせい)哺乳類は何か。","answer":"コアラ"},
+  {"id":35,"title":"北海道クイズ","emoji":"🗾","question":"日本列島最北(さいほく)に位置し、道庁所在地(どうちょうしょざいち)を札幌市とする、面積最大の都道府県はどこか。","answer":"北海道"},
+  {"id":36,"title":"ピサの斜塔クイズ","emoji":"🇮🇹","question":"イタリア・トスカーナ州の大聖堂に付属(ふぞく)する鐘楼(しょうろう)で、地盤沈下(じばんちんか)により傾斜(けいしゃ)した状態で知られる建造物は何か。","answer":"ピサの斜塔"},
+  {"id":37,"title":"モーツァルトクイズ","emoji":"🎻","question":"18世紀後半に活動したザルツブルク出身の作曲家で、『魔笛』(まてき)等のオペラや多数の交響曲を残した神童(しんどう)と称(しょう)される人物は誰か。","answer":"モーツァルト"},
+  {"id":38,"title":"ライト兄弟クイズ","emoji":"✈️","question":"1903年、ノースカロライナ州キティホークにおいて人類初の動力飛行(どうりょくひこう)に成功した米国の兄弟は誰か。","answer":"ライト兄弟"},
+  {"id":39,"title":"万里の長城クイズ","emoji":"🧱","question":"北方民族の侵入(しんにゅう)を防ぐ目的で歴代王朝により築造(ちくぞう)された、中国北部に延(の)びる世界最長級の城壁(じょうへき)は何か。","answer":"万里の長城"},
+  {"id":40,"title":"バナナクイズ","emoji":"🍌","question":"バショウ科の多年草の果実で、熱帯地域で栽培され、湾曲(わんきょく)した房状(ふさじょう)の形態で流通する黄色い果物は何か。","answer":"バナナ"},
+  {"id":41,"title":"イチゴクイズ","emoji":"🍓","question":"バラ科の多年草で、可食部(かしょくぶ)は花托(かたく)が肥大(ひだい)したものであり、表面の粒が真の果実である赤い果物は何か。","answer":"イチゴ"},
+  {"id":42,"title":"カブトムシクイズ","emoji":"🪲","question":"甲虫目(こうちゅうもく)コガネムシ科に属し、雄(おす)が頭部に大きな角(つの)を持つ、日本の夏を代表する昆虫は何か。","answer":"カブトムシ"},
+  {"id":43,"title":"ドラえもんクイズ","emoji":"🤖","question":"藤子・F・不二雄作の漫画に登場する、22世紀から来た猫型(ねこがた)ロボットで、四次元ポケットから秘密道具(ひみつどうぐ)を出すキャラクターは誰か。","answer":"ドラえもん"},
+  {"id":44,"title":"スカイツリークイズ","emoji":"🗼","question":"2012年に竣工(しゅんこう)した墨田区(すみだく)押上(おしあげ)の電波塔で、高さ634mと自立式電波塔として世界一を誇(ほこ)る建造物は何か。","answer":"東京スカイツリー"},
+  {"id":45,"title":"卑弥呼クイズ","emoji":"👑","question":"『魏志倭人伝』(ぎしわじんでん)に記載(きさい)された、3世紀の邪馬台国(やまたいこく)を統治(とうち)したとされる女王は誰か。","answer":"卑弥呼"},
+  {"id":46,"title":"ゴッホクイズ","emoji":"🌻","question":"『ひまわり』『星月夜』(ほしづきよ)等を描いた、ポスト印象派(いんしょうは)を代表するオランダ出身の画家は誰か。","answer":"ゴッホ"},
+  {"id":47,"title":"天ぷらクイズ","emoji":"🍤","question":"魚介や野菜に小麦粉の衣(ころも)をつけて油で揚(あ)げた日本料理で、16世紀にポルトガルから伝来した調理法を起源(きげん)とするものは何か。","answer":"天ぷら"},
+  {"id":48,"title":"うどんクイズ","emoji":"🥢","question":"小麦粉に塩水を加えて練(ね)り、帯状(おびじょう)に切った太い麺で、讃岐(さぬき)地方のものが特に著名な日本の麺類は何か。","answer":"うどん"},
+  {"id":49,"title":"ラクダクイズ","emoji":"🐪","question":"背部に脂肪(しぼう)を蓄(たくわ)えた隆起(りゅうき)を持ち、砂漠(さばく)での輸送に古来(こらい)用いられてきた偶蹄目(ぐうていもく)の哺乳類は何か。","answer":"ラクダ"},
+  {"id":50,"title":"イルカクイズ","emoji":"🐬","question":"鯨偶蹄目(くじらぐうていもく)ハクジラ亜目に属する小型鯨類(げいるい)の総称で、高い知能と反響定位(はんきょうていい)能力で知られる海生哺乳類は何か。","answer":"イルカ"},
+  {"id":51,"title":"サッカークイズ","emoji":"⚽","question":"11人ずつの2チームが主に足で球を扱い相手ゴールに入れることを競う、世界で最も競技人口が多いとされる球技は何か。","answer":"サッカー"},
+  {"id":52,"title":"ピアノクイズ","emoji":"🎹","question":"18世紀初頭にイタリアのクリストフォリが発明した、ハンマーで弦(げん)を打って発音する88鍵(けん)の鍵盤楽器(けんばんがっき)は何か。","answer":"ピアノ"},
+  {"id":53,"title":"桜クイズ","emoji":"🌸","question":"バラ科サクラ属の落葉樹(らくようじゅ)の総称で、日本において開花予想が気象情報として報じられる国民的花木(かぼく)は何か。","answer":"桜"},
+  {"id":54,"title":"忍者クイズ","emoji":"🥷","question":"中世から近世の日本において諜報(ちょうほう)活動等に従事(じゅうじ)したとされる者の呼称(こしょう)で、伊賀(いが)・甲賀(こうか)のものが著名なのは何か。","answer":"忍者"},
+  {"id":55,"title":"相撲クイズ","emoji":"🤼","question":"土俵上(どひょうじょう)で力士(りきし)が組み合い勝敗を競う、日本の国技(こくぎ)とされる格闘技(かくとうぎ)は何か。","answer":"相撲"},
+  {"id":56,"title":"オーロラクイズ","emoji":"🌌","question":"太陽風の荷電粒子(かでんりゅうし)が大気と衝突(しょうとつ)して発光する、極地方(きょくちほう)で観測される大気光学現象(たいきこうがくげんしょう)は何か。","answer":"オーロラ"},
+  {"id":57,"title":"エベレストクイズ","emoji":"🏔️","question":"ヒマラヤ山脈に位置する標高8,849mの世界最高峰(さいこうほう)で、チベット名をチョモランマという山は何か。","answer":"エベレスト"},
+  {"id":58,"title":"ナイアガラの滝クイズ","emoji":"🌊","question":"米国とカナダの国境(こっきょう)に位置し、エリー湖からオンタリオ湖へ注ぐ川に形成された北米最大級の瀑布(ばくふ)は何か。","answer":"ナイアガラの滝"},
+  {"id":59,"title":"チータークイズ","emoji":"🐆","question":"食肉目ネコ科に属し、時速100kmを超える走行能力を持つ現生最速(さいそく)の陸上動物は何か。","answer":"チーター"},
+  {"id":60,"title":"納豆クイズ","emoji":"🫘","question":"蒸(む)した大豆(だいず)を納豆菌により発酵(はっこう)させた日本の伝統食品で、特有の粘性(ねんせい)と匂(にお)いを持つものは何か。","answer":"納豆"}
+];
+
+(function(){
+  "use strict";
+
+  const stage = document.getElementById('stage');
+  const curEl = document.getElementById('cur');
+  const totalEl = document.getElementById('total');
+  const barEl = document.getElementById('bar');
+  const modeLabel = document.getElementById('mode-label');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const shuffleBtn = document.getElementById('shuffle');
+
+  let order = QUIZ.map((_, i) => i);
+  let pos = 0;
+  let shuffled = false;
+
+  totalEl.textContent = QUIZ.length;
+
+  function buildCard(item){
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="plate">第 ${item.id} 問</div>
+      <h2>${escapeHtml(item.title)}<span class="q-suffix">QUESTION</span></h2>
+      <div class="emoji" aria-hidden="true">${item.emoji}</div>
+      <div class="divider"><span>問 題</span></div>
+      <p class="question"><span class="lead-mark">問.</span>${escapeHtml(item.question)}</p>
+      <button class="reveal-btn" type="button">答えを見る</button>
+      <div class="answer" aria-live="polite">
+        <div class="a-label">ANSWER</div>
+        <div class="a-text">${escapeHtml(item.answer)}</div>
+        <div class="a-note">……ええ、タイトルに書いてあったとおりです。</div>
+      </div>`;
+
+    const btn = card.querySelector('.reveal-btn');
+    const ans = card.querySelector('.answer');
+    btn.addEventListener('click', function(){
+      ans.classList.add('show');
+      btn.disabled = true;
+      btn.textContent = '答え合わせ完了';
+      btn.style.filter = 'grayscale(.4) opacity(.75)';
+    });
+    return card;
+  }
+
+  function render(direction){
+    const item = QUIZ[order[pos]];
+    const card = buildCard(item);
+
+    const old = stage.firstElementChild;
+    if(old && direction){
+      old.classList.add('swipe-anim');
+      old.style.transform = `translateX(${direction < 0 ? '' : '-'}55%)`;
+      old.style.opacity = '0';
+      const removing = old;
+      setTimeout(() => { if(removing.parentNode) removing.remove(); }, 260);
+      // incoming card starts offset
+      card.classList.add('swipe-anim');
+      card.style.transform = `translateX(${direction < 0 ? '-' : ''}55%)`;
+      card.style.opacity = '0';
+      stage.appendChild(card);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        card.style.transform = 'translateX(0)';
+        card.style.opacity = '1';
+      }));
+    } else {
+      stage.innerHTML = '';
+      stage.appendChild(card);
+    }
+    updateChrome();
+  }
+
+  function updateChrome(){
+    curEl.textContent = pos + 1;
+    barEl.style.width = ((pos + 1) / QUIZ.length * 100) + '%';
+    prevBtn.disabled = pos === 0;
+    nextBtn.disabled = pos === QUIZ.length - 1;
+    modeLabel.textContent = shuffled ? '出題順：シャッフル' : '出題順：標準';
+  }
+
+  function go(delta){
+    const target = pos + delta;
+    if(target < 0 || target >= QUIZ.length) return;
+    pos = target;
+    render(delta > 0 ? 1 : -1);
+  }
+
+  prevBtn.addEventListener('click', () => go(-1));
+  nextBtn.addEventListener('click', () => go(1));
+
+  shuffleBtn.addEventListener('click', function(){
+    for(let i = order.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    shuffled = true;
+    pos = 0;
+    render(0);
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowLeft') go(-1);
+    else if(e.key === 'ArrowRight') go(1);
+  });
+
+  // --- swipe (pointer: touch + mouse) ---
+  let startX = 0, startY = 0, dragging = false, locked = false;
+
+  stage.addEventListener('pointerdown', function(e){
+    if(e.target.closest('.reveal-btn')) return;
+    dragging = true; locked = false;
+    startX = e.clientX; startY = e.clientY;
+  });
+
+  stage.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    if(!locked){
+      if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if(Math.abs(dy) > Math.abs(dx)){ dragging = false; return; } // vertical scroll
+      locked = true;
+      const card = stage.firstElementChild;
+      if(card) card.style.transition = 'none';
+    }
+    const card = stage.firstElementChild;
+    if(card){
+      const resist = ((pos === 0 && dx > 0) || (pos === QUIZ.length - 1 && dx < 0)) ? 0.3 : 1;
+      card.style.transform = `translateX(${dx * resist}px) rotate(${dx * resist * 0.015}deg)`;
+    }
+  });
+
+  function endDrag(e){
+    if(!dragging){ return; }
+    dragging = false;
+    const card = stage.firstElementChild;
+    if(!card){ return; }
+    if(!locked){ return; }
+    const dx = e.clientX - startX;
+    card.style.transition = '';
+    const threshold = Math.min(90, stage.offsetWidth * 0.22);
+    if(dx <= -threshold && pos < QUIZ.length - 1){
+      go(1);
+    } else if(dx >= threshold && pos > 0){
+      go(-1);
+    } else {
+      card.classList.add('swipe-anim');
+      card.style.transform = 'translateX(0) rotate(0)';
+      setTimeout(() => card.classList.remove('swipe-anim'), 280);
+    }
+  }
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', () => { dragging = false; });
+  stage.addEventListener('pointerleave', function(e){ if(dragging) endDrag(e); });
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  render(0);
+})();
+</script>
+</body>
+</html>
