@@ -301,32 +301,12 @@
     .card{padding:34px 34px 30px;}
   }
 
-  .trick-stamp{
-    position:absolute;
-    top:14px;
-    right:13px;
-    z-index:3;
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    padding:5px 9px 4px;
-    color:#a83a2c;
-    border:2px solid #a83a2c;
-    border-radius:9px;
-    background:rgba(168,58,44,.06);
-    box-shadow:inset 0 0 0 1px rgba(168,58,44,.18);
-    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
-    font-size:11px;
-    font-weight:800;
-    letter-spacing:.16em;
-    text-indent:.16em;
-    line-height:1;
-    transform:rotate(-7deg);
-    opacity:.9;
-    pointer-events:none;
+  .card.trick{
+    background:#eef1f6;
   }
-  .trick-stamp svg{width:13px;height:13px;flex:none;}
-  @media (max-width:380px){ .trick-stamp{top:12px;right:11px;font-size:10px;padding:4px 7px 3px;} }
+  .card.trick::before{
+    border-color:#dfe3ec;
+  }
 </style>
 </head>
 <body>
@@ -435,7 +415,6 @@ const QUIZ = [
   {"id":70,"title":"聖徳太子クイズ","emoji":"📜","question":"推古朝(すいこちょう)において摂政(せっしょう)を務め、冠位十二階(かんいじゅうにかい)および十七条憲法を制定したと伝えられる皇族(こうぞく)は誰か。","answer":"聖徳太子","type":"normal"}
 ];
 
-const TRICK_STAMP = `<div class="trick-stamp" aria-label="ひっかけ問題"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13M14 4l4 4-4 4M20 16H7M10 12l-4 4 4 4"/></svg><span>ひっかけ</span></div>`;
 
 (function(){
   "use strict";
@@ -457,9 +436,8 @@ const TRICK_STAMP = `<div class="trick-stamp" aria-label="ひっかけ問題"><s
 
   function buildCard(item){
     const card = document.createElement('article');
-    card.className = 'card';
+    card.className = item.type === 'trick' ? 'card trick' : 'card';
     card.innerHTML = `
-      ${item.type === 'trick' ? TRICK_STAMP : ''}
       <div class="plate">第 ${item.id} 問</div>
       <h2>${escapeHtml(item.title)}<span class="q-suffix">QUESTION</span></h2>
       <div class="emoji" aria-hidden="true">${item.emoji}</div>
